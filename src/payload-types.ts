@@ -121,6 +121,12 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  firstName: string;
+  lastName: string;
+  roles: ('admin' | 'editor' | 'user')[];
+  phone?: string | null;
+  bio?: string | null;
+  profilePicture?: string | Media | null;
   updatedAt: string;
   createdAt: string;
   email: string;
