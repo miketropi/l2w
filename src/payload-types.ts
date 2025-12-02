@@ -86,6 +86,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {};
   globalsSelect: {};
   locale: null;
@@ -126,7 +127,7 @@ export interface User {
   roles: ('admin' | 'editor' | 'user')[];
   phone?: string | null;
   bio?: string | null;
-  profilePicture?: string | Media | null;
+  profilePicture?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -243,6 +244,12 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  roles?: T;
+  phone?: T;
+  bio?: T;
+  profilePicture?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
