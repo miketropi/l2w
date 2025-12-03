@@ -1,0 +1,110 @@
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
+import { redirect } from 'next/navigation'
+
+import { User } from '@/payload-types'
+
+interface AuthState {
+  user: User | null
+  token: string | null 
+  loading: boolean
+  setUser: (user: User | null) => void
+  login: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+  me: () => Promise<void>
+}
+
+const initialState = {
+  user: null,
+  token: null,
+  loading: false,
+} as const
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    immer((set) => ({
+      ...initialState,
+      setUser: (user: User | null) => {
+        set(state => { state.user = user })
+      },
+      login: async (email: string, password: string) => {
+        set(state => { state.loading = true })
+
+        try {
+          const res = await fetch('/api/users/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          const data = await res.json()
+
+          if (res.ok) {
+            set(state => {
+              state.user = data.user
+              state.token = data.token
+              state.loading = false
+            })
+          } else {
+            set(state => { state.loading = false })
+            throw new Error(data.message)
+          }
+        } catch (err) {
+          set(state => { state.loading = false })
+          throw err
+        }
+      },
+      logout: async () => {
+        set(state => { state.loading = true })
+        
+        // logout handle 
+        try {
+          const res = await fetch('/api/users/logout', {
+            method: 'POST',
+            credentials: 'include', 
+          })
+
+          if (res.ok) {
+            set(state => {
+              state.user = null
+              state.token = null
+              state.loading = false
+            })
+
+            redirect('/')
+          } else {
+            set(state => { state.loading = false })
+            throw new Error((await res.json()).message)
+          }
+        } catch (err) {
+          set(state => { state.loading = false })
+          throw err
+        }
+      },
+      me: async () => {
+        set(state => { state.loading = true })
+
+        try {
+          const res = await fetch('/api/users/me', {
+            credentials: 'include',
+          })
+          const data = await res.json()
+
+          set(state => { state.user = data.user })
+          set(state => { state.loading = false })
+          return data.user
+        } catch (err) {
+          set(state => { state.loading = false })
+          throw err
+        }
+      }
+    })),
+    {
+      name: 'auth-store',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+)

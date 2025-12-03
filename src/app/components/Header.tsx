@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import UserActive from '@/app/components/UserActive'
 
 type NavItem = {
   label: string
@@ -14,10 +15,6 @@ const LandingNavItems: NavItem[] = [
   {
     label: 'About',
     href: '/about',
-  },
-  {
-    label: 'Register',
-    href: '/register',
   },
   {
     label: 'Dashboard',
@@ -41,7 +38,9 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+            <UserActive />
           </div>
+          
           <div className="md:hidden">
             <button
               type="button"
