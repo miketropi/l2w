@@ -8,7 +8,8 @@ import { User } from '@/payload-types'
 interface AuthState {
   user: User | null
   token: string | null 
-  loading: boolean
+  loading: boolean,
+  error: string | null,
   setUser: (user: User | null) => void
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
@@ -19,6 +20,7 @@ const initialState = {
   user: null,
   token: null,
   loading: false,
+  error: null,
 } as const
 
 export const useAuthStore = create<AuthState>()(
@@ -48,13 +50,18 @@ export const useAuthStore = create<AuthState>()(
               state.token = data.token
               state.loading = false
             })
+
+            return data.user
           } else {
-            set(state => { state.loading = false })
-            throw new Error(data.message)
+            // console.log('___data.error', data.errors[0].message)
+            set(state => { state.error = data.errors[0].message })
+            throw new Error(data.errors[0].message)
           }
         } catch (err) {
-          set(state => { state.loading = false })
+          set(state => { state.error = err instanceof Error ? err.message : 'An unknown error occurred' })
           throw err
+        } finally {
+          set(state => { state.loading = false })
         }
       },
       logout: async () => {
@@ -73,8 +80,6 @@ export const useAuthStore = create<AuthState>()(
               state.token = null
               state.loading = false
             })
-
-            redirect('/')
           } else {
             set(state => { state.loading = false })
             throw new Error((await res.json()).message)
@@ -105,6 +110,10 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-store',
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+      }),
     }
   )
 )
