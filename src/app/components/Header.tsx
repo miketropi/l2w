@@ -13,6 +13,8 @@ type NavItem = {
 const LandingNavItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
+  // news
+  { label: 'News', href: '/news' },
 ]
 
 export default function Header() {
@@ -98,7 +100,9 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  isActive('/login') ? 'text-indigo-600' : 'text-gray-700 hover:text-indigo-600'
+                }`}
               >
                 Login
               </Link>

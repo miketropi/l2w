@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
-interface LoginFormProps {
+interface SigninFormProps {
   onLogin: (email: string, password: string) => Promise<void>
   error: string | null
 }
 
-export default function LoginForm({ onLogin, error }: LoginFormProps) {
+export default function SigninForm({ onLogin, error }: SigninFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -104,13 +104,6 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
           )}
         </button>
       </form>
-
-      <div className="mt-6 text-center text-sm text-gray-600">
-        Don't have an account?{' '}
-        <Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
-          Sign up
-        </Link>
-      </div>
     </div>
   )
 }

@@ -11,7 +11,9 @@ interface AuthState {
   loading: boolean,
   error: string | null,
   setUser: (user: User | null) => void
+  clearError: () => void
   login: (email: string, password: string) => Promise<void>
+  signup: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
   logout: () => Promise<void>
   me: () => Promise<void>
 }
@@ -29,6 +31,9 @@ export const useAuthStore = create<AuthState>()(
       ...initialState,
       setUser: (user: User | null) => {
         set(state => { state.user = user })
+      },
+      clearError: () => {
+        set(state => { state.error = null })
       },
       login: async (email: string, password: string) => {
         set(state => { state.loading = true })
@@ -49,6 +54,7 @@ export const useAuthStore = create<AuthState>()(
               state.user = data.user
               state.token = data.token
               state.loading = false
+              state.error = null
             })
 
             return data.user
@@ -56,6 +62,62 @@ export const useAuthStore = create<AuthState>()(
             // console.log('___data.error', data.errors[0].message)
             set(state => { state.error = data.errors[0].message })
             throw new Error(data.errors[0].message)
+          }
+        } catch (err) {
+          set(state => { state.error = err instanceof Error ? err.message : 'An unknown error occurred' })
+          throw err
+        } finally {
+          set(state => { state.loading = false })
+        }
+      },
+      signup: async (email: string, password: string, firstName: string, lastName: string) => {
+        set(state => { state.loading = true })
+        set(state => { state.error = null })
+
+        try {
+          const res = await fetch('/api/payload/register', {
+            method: 'POST',
+            body: JSON.stringify({ 
+              email, 
+              password,
+              firstName,
+              lastName,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          const data = await res.json()
+
+          if (res.ok) {
+            // After successful signup, automatically log in
+            const loginRes = await fetch('/api/users/login', {
+              method: 'POST',
+              body: JSON.stringify({ email, password }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+
+            const loginData = await loginRes.json()
+
+            if (loginRes.ok) {
+              set(state => {
+                state.user = loginData.user
+                state.token = loginData.token
+                state.loading = false
+                state.error = null
+              })
+
+              return loginData.user
+            } else {
+              set(state => { state.error = loginData?.message || 'Account created but login failed' })
+              throw new Error(loginData?.message || 'Account created but login failed')
+            }
+          } else {
+            set(state => { state.error = data?.message || 'Signup failed' })
+            throw new Error(data?.message || 'Signup failed')
           }
         } catch (err) {
           set(state => { state.error = err instanceof Error ? err.message : 'An unknown error occurred' })
