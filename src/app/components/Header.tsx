@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import UserActive from '@/app/components/UserActive'
 import { useAuthStore } from '@/app/store/auth'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -83,21 +84,18 @@ export default function Header() {
                   Dashboard
                 </Link>
                 <div className="flex items-center space-x-2 pl-4 border-l border-gray-200">
-                  <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                  {/* <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <span className="text-indigo-600 text-xs font-medium">
                       {user.email?.charAt(0).toUpperCase() || 'U'}
                     </span>
                   </div>
                   <span className="text-sm text-gray-600 hidden lg:block max-w-[80px] truncate">
                     {user.email}
-                  </span>
+                  </span> */}
+
+                  <UserActive />
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
-                >
-                  Logout
-                </button>
+                
               </>
             ) : (
               <Link

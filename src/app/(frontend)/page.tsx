@@ -9,7 +9,7 @@ export default function HomePage() {
         Learn to Work
       </h1>
       <p className="text-md mb-8 font-mono">
-        A modern platform built with Payload CMS and Next.js.
+        A modern platform built for Learning and Working.
       </p>
       <Link
         href="/login"
