@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Tab, { TabItem } from '@/app/components/Tab'
 import { useAuthStore } from '@/app/store/auth'
 import Image from 'next/image'
@@ -15,6 +15,16 @@ export default function MyAccountPage() {
     phone: user?.phone || '',
     bio: user?.bio || '',
   })
+
+  useEffect(() => {
+    setFormData({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      bio: user?.bio || '',
+    })
+  }, [user])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
