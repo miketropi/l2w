@@ -43,6 +43,7 @@ export default function SignupForm({ onSignup, error }: SignupFormProps) {
       setFirstName('')
       setLastName('')
     } catch (err) {
+      console.error(err)
     } finally {
       setIsLoading(false)
     }

@@ -56,7 +56,7 @@ export default function LoginPage() {
               </svg>
             </div>
             <h2 className="text-xl font-bold mb-1">Already Signed In</h2>
-            <p className="text-gray-500 mb-6 text-sm">You're already logged in.</p>
+            <p className="text-gray-500 mb-6 text-sm">You&apos;re already logged in.</p>
             <button
               onClick={() => router.push('/dashboard')}
               className="px-4 py-2 rounded bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition"

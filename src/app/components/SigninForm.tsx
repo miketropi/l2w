@@ -23,6 +23,7 @@ export default function SigninForm({ onLogin, error }: SigninFormProps) {
       setEmail('')
       setPassword('')
     } catch (err) {
+      console.error(err)
     } finally {
       setIsLoading(false)
     }

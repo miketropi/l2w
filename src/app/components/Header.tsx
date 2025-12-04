@@ -76,7 +76,9 @@ export default function Header() {
               <>
                 <Link
                   href="/dashboard"
-                  className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+                  className={`text-sm font-medium transition-colors ${
+                    isActive('/dashboard') ? 'text-indigo-600' : 'text-gray-700 hover:text-indigo-600'
+                  }`}
                 >
                   Dashboard
                 </Link>
