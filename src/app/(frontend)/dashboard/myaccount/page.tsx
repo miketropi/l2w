@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Tab, { TabItem } from '@/app/components/Tab'
 import { useAuthStore } from '@/app/store/auth'
+import Image from 'next/image'
 
 export default function MyAccountPage() {
   const { user } = useAuthStore()
@@ -43,10 +44,12 @@ export default function MyAccountPage() {
       <div className="flex items-center space-x-6">
         <div className="h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center">
           {user?.profilePicture && typeof user.profilePicture === 'object' ? (
-            <img
-              src={typeof user.profilePicture.url === 'string' ? user.profilePicture.url : ''}
+            <Image
+              src={typeof user.profilePicture.url === 'string' ? user.profilePicture.url : '/images/default-profile.png'}
               alt="Profile"
               className="h-24 w-24 rounded-full object-cover"
+              width={96}
+              height={96}
             />
           ) : (
             <span className="text-indigo-600 text-2xl font-medium">
