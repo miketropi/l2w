@@ -29,7 +29,7 @@ export default function UserActive() {
   }
 
   const trigger = (
-    <button className="flex items-center space-x-2 hover:opacity-80 transition-opacity" title={ user.email || 'User' }>
+    <button className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer" title={ user.email || 'User' }>
       <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
         <span className="text-indigo-600 text-xs font-medium">
           {user.email?.charAt(0).toUpperCase() || 'U'}

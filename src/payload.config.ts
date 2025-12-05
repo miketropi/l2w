@@ -8,6 +8,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users/Users'
 import { Media } from './collections/Media'
+import { CoursesCollections } from './collections/Courses'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
@@ -21,7 +22,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, ...CoursesCollections],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -69,6 +69,11 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    courses: Course;
+    modules: Module;
+    lessons: Lesson;
+    'course-categories': CourseCategory;
+    'course-tags': CourseTag;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +83,11 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
+    modules: ModulesSelect<false> | ModulesSelect<true>;
+    lessons: LessonsSelect<false> | LessonsSelect<true>;
+    'course-categories': CourseCategoriesSelect<false> | CourseCategoriesSelect<true>;
+    'course-tags': CourseTagsSelect<false> | CourseTagsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -166,6 +176,110 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Create and manage courses system
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  thumbnail?: (string | null) | Media;
+  categories?: (string | CourseCategory)[] | null;
+  tags?: (string | CourseTag)[] | null;
+  modules?: (string | Module)[] | null;
+  price?: number | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Create and manage course categories
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-categories".
+ */
+export interface CourseCategory {
+  id: string;
+  name: string;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Create and manage course tags
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-tags".
+ */
+export interface CourseTag {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Create and manage modules
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "modules".
+ */
+export interface Module {
+  id: string;
+  title: string;
+  course: string | Course;
+  lessons?: (string | Lesson)[] | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Create and manage lessons
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons".
+ */
+export interface Lesson {
+  id: string;
+  title: string;
+  type?: ('video' | 'article' | 'quiz') | null;
+  video?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  quiz?:
+    | {
+        question?: string | null;
+        options?:
+          | {
+              option?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        correct?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  module?: (string | null) | Module;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -196,6 +310,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: string | Course;
+      } | null)
+    | ({
+        relationTo: 'modules';
+        value: string | Module;
+      } | null)
+    | ({
+        relationTo: 'lessons';
+        value: string | Lesson;
+      } | null)
+    | ({
+        relationTo: 'course-categories';
+        value: string | CourseCategory;
+      } | null)
+    | ({
+        relationTo: 'course-tags';
+        value: string | CourseTag;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -284,6 +418,81 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  thumbnail?: T;
+  categories?: T;
+  tags?: T;
+  modules?: T;
+  price?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "modules_select".
+ */
+export interface ModulesSelect<T extends boolean = true> {
+  title?: T;
+  course?: T;
+  lessons?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons_select".
+ */
+export interface LessonsSelect<T extends boolean = true> {
+  title?: T;
+  type?: T;
+  video?: T;
+  content?: T;
+  quiz?:
+    | T
+    | {
+        question?: T;
+        options?:
+          | T
+          | {
+              option?: T;
+              id?: T;
+            };
+        correct?: T;
+        id?: T;
+      };
+  module?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-categories_select".
+ */
+export interface CourseCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-tags_select".
+ */
+export interface CourseTagsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
