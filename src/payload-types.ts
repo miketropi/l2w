@@ -185,7 +185,24 @@ export interface Course {
   id: string;
   title: string;
   slug: string;
-  excerpt?: string | null;
+  /**
+   * This is the excerpt of the course
+   */
+  excerpt?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   thumbnail?: (string | null) | Media;
   categories?: (string | CourseCategory)[] | null;
   tags?: (string | CourseTag)[] | null;

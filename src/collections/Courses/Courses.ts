@@ -17,7 +17,11 @@ export const Courses: CollectionConfig = {
     },
     {
       name: 'excerpt',
-      type: 'textarea',
+      // richText
+      type: 'richText',
+      admin: {
+        description: 'This is the excerpt of the course',
+      },
     },
     {
       name: 'thumbnail',

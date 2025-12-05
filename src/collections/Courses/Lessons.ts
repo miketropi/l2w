@@ -34,7 +34,7 @@ export const Lessons: CollectionConfig = {
       },
     },
 
-    // Quiz fields tùy thuộc vào logic của bạn
+    
     {
       name: 'quiz',
       type: 'array',
