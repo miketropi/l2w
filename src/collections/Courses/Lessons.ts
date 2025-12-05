@@ -21,7 +21,8 @@ export const Lessons: CollectionConfig = {
       name: 'video',
       type: 'text',
       admin: {
-        condition: (_, siblings) => siblings.type === 'video',
+        // in video & article, this field is required
+        condition: (_, siblings) => siblings.type === 'video' || siblings.type === 'article',
       },
     },
 
@@ -29,7 +30,7 @@ export const Lessons: CollectionConfig = {
       name: 'content',
       type: 'richText',
       admin: {
-        condition: (_, siblings) => siblings.type === 'article',
+        condition: (_, siblings) => siblings.type === 'article' || siblings.type === 'video',
       },
     },
 
